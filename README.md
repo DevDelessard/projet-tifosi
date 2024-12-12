@@ -18,3 +18,10 @@
 ## Remarques :
 - Assurez-vous que MySQL est configuré correctement pour éviter des conflits de clés étrangères.
 - Vérifiez les contraintes avant de modifier les données.
+
+
+
+## Les identifiants de l'utilisateur tifosi :
+- Nom d'utilisateur : tifosiuser
+- Hôte : localhost
+- Mot de passe : Oceane12345

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : jeu. 12 déc. 2024 à 10:25
+-- Généré le : lun. 16 déc. 2024 à 10:09
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `tifosi`
 --
+CREATE DATABASE IF NOT EXISTS `tifosi` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `tifosi`;
 
 -- --------------------------------------------------------
 
@@ -27,13 +29,10 @@ SET time_zone = "+00:00";
 -- Structure de la table `achete`
 --
 
-DROP TABLE IF EXISTS `achete`;
-CREATE TABLE IF NOT EXISTS `achete` (
+CREATE TABLE `achete` (
   `id_client` int(11) NOT NULL,
   `id_menu` int(11) NOT NULL,
-  `jour` date NOT NULL,
-  PRIMARY KEY (`id_client`,`id_menu`,`jour`),
-  KEY `id_menu` (`id_menu`)
+  `jour` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -42,14 +41,10 @@ CREATE TABLE IF NOT EXISTS `achete` (
 -- Structure de la table `boisson`
 --
 
-DROP TABLE IF EXISTS `boisson`;
-CREATE TABLE IF NOT EXISTS `boisson` (
-  `id_boisson` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `boisson` (
+  `id_boisson` int(11) NOT NULL,
   `nom_boisson` varchar(45) NOT NULL,
-  `id_marque` int(11) NOT NULL,
-  `prix_unite` float NOT NULL DEFAULT 1.5,
-  PRIMARY KEY (`id_boisson`),
-  KEY `id_marque` (`id_marque`)
+  `id_marque` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -58,13 +53,11 @@ CREATE TABLE IF NOT EXISTS `boisson` (
 -- Structure de la table `client`
 --
 
-DROP TABLE IF EXISTS `client`;
-CREATE TABLE IF NOT EXISTS `client` (
-  `id_client` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `client` (
+  `id_client` int(11) NOT NULL,
   `nom_client` varchar(45) NOT NULL,
   `age` int(11) NOT NULL,
-  `cp_client` int(11) NOT NULL,
-  PRIMARY KEY (`id_client`)
+  `cp_client` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -73,12 +66,9 @@ CREATE TABLE IF NOT EXISTS `client` (
 -- Structure de la table `compose`
 --
 
-DROP TABLE IF EXISTS `compose`;
-CREATE TABLE IF NOT EXISTS `compose` (
+CREATE TABLE `compose` (
   `id_focaccia` int(11) NOT NULL,
-  `id_ingredient` int(11) NOT NULL,
-  PRIMARY KEY (`id_focaccia`,`id_ingredient`),
-  KEY `id_ingredient` (`id_ingredient`)
+  `id_ingredient` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -87,15 +77,10 @@ CREATE TABLE IF NOT EXISTS `compose` (
 -- Structure de la table `focaccia`
 --
 
-DROP TABLE IF EXISTS `focaccia`;
-CREATE TABLE IF NOT EXISTS `focaccia` (
-  `id_focaccia` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `focaccia` (
+  `id_focaccia` int(11) NOT NULL,
   `nom_focaccia` varchar(45) NOT NULL,
-  `id_composition` int(11) NOT NULL,
-  `taille` enum('standard','enfant') DEFAULT 'standard',
-  `prix_focaccia` float NOT NULL,
-  PRIMARY KEY (`id_focaccia`),
-  KEY `id_composition` (`id_composition`)
+  `prix` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -104,11 +89,9 @@ CREATE TABLE IF NOT EXISTS `focaccia` (
 -- Structure de la table `ingredient`
 --
 
-DROP TABLE IF EXISTS `ingredient`;
-CREATE TABLE IF NOT EXISTS `ingredient` (
-  `id_ingredient` int(11) NOT NULL AUTO_INCREMENT,
-  `nom_ingredient` varchar(45) NOT NULL,
-  PRIMARY KEY (`id_ingredient`)
+CREATE TABLE `ingredient` (
+  `id_ingredient` int(11) NOT NULL,
+  `nom_ingredient` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -117,11 +100,9 @@ CREATE TABLE IF NOT EXISTS `ingredient` (
 -- Structure de la table `marque`
 --
 
-DROP TABLE IF EXISTS `marque`;
-CREATE TABLE IF NOT EXISTS `marque` (
-  `id_marque` int(11) NOT NULL AUTO_INCREMENT,
-  `nom_marque` varchar(45) NOT NULL,
-  PRIMARY KEY (`id_marque`)
+CREATE TABLE `marque` (
+  `id_marque` int(11) NOT NULL,
+  `nom_marque` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -130,30 +111,13 @@ CREATE TABLE IF NOT EXISTS `marque` (
 -- Structure de la table `menu`
 --
 
-DROP TABLE IF EXISTS `menu`;
-CREATE TABLE IF NOT EXISTS `menu` (
-  `id_menu` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `menu` (
+  `id_menu` int(11) NOT NULL,
   `type_menu` enum('simple','gourmet','enfant') NOT NULL,
   `id_focaccia` int(11) NOT NULL,
   `id_boisson` int(11) NOT NULL,
-  `prix_menu` float NOT NULL,
-  PRIMARY KEY (`id_menu`),
-  KEY `fk_menu_focaccia` (`id_focaccia`),
-  KEY `fk_menu_boisson` (`id_boisson`)
+  `prix_menu` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Doublure de structure pour la vue `menu_gourmet`
--- (Voir ci-dessous la vue réelle)
---
-DROP VIEW IF EXISTS `menu_gourmet`;
-CREATE TABLE IF NOT EXISTS `menu_gourmet` (
-`nom_focaccia` varchar(45)
-,`nombre_ingredients` bigint(21)
-,`prix_menu` int(2)
-);
 
 -- --------------------------------------------------------
 
@@ -161,22 +125,113 @@ CREATE TABLE IF NOT EXISTS `menu_gourmet` (
 -- Structure de la table `paye`
 --
 
-DROP TABLE IF EXISTS `paye`;
-CREATE TABLE IF NOT EXISTS `paye` (
+CREATE TABLE `paye` (
   `id_client` int(11) NOT NULL,
-  `jour` date NOT NULL,
-  PRIMARY KEY (`id_client`,`jour`)
+  `jour` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
+--
+-- Index pour les tables déchargées
+--
 
 --
--- Structure de la vue `menu_gourmet`
+-- Index pour la table `achete`
 --
-DROP TABLE IF EXISTS `menu_gourmet`;
+ALTER TABLE `achete`
+  ADD PRIMARY KEY (`id_client`,`id_menu`),
+  ADD KEY `id_menu` (`id_menu`);
 
-DROP VIEW IF EXISTS `menu_gourmet`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `menu_gourmet`  AS SELECT `f`.`nom_focaccia` AS `nom_focaccia`, count(`c`.`id_ingredient`) AS `nombre_ingredients`, 15 AS `prix_menu` FROM (`focaccia` `f` join `compose` `c` on(`f`.`id_focaccia` = `c`.`id_focaccia`)) WHERE `f`.`taille` <> 'enfant' GROUP BY `f`.`id_focaccia` HAVING `nombre_ingredients` > 3 ;
+--
+-- Index pour la table `boisson`
+--
+ALTER TABLE `boisson`
+  ADD PRIMARY KEY (`id_boisson`),
+  ADD KEY `id_marque` (`id_marque`);
+
+--
+-- Index pour la table `client`
+--
+ALTER TABLE `client`
+  ADD PRIMARY KEY (`id_client`);
+
+--
+-- Index pour la table `compose`
+--
+ALTER TABLE `compose`
+  ADD PRIMARY KEY (`id_focaccia`,`id_ingredient`),
+  ADD KEY `id_ingredient` (`id_ingredient`);
+
+--
+-- Index pour la table `focaccia`
+--
+ALTER TABLE `focaccia`
+  ADD PRIMARY KEY (`id_focaccia`);
+
+--
+-- Index pour la table `ingredient`
+--
+ALTER TABLE `ingredient`
+  ADD PRIMARY KEY (`id_ingredient`);
+
+--
+-- Index pour la table `marque`
+--
+ALTER TABLE `marque`
+  ADD PRIMARY KEY (`id_marque`);
+
+--
+-- Index pour la table `menu`
+--
+ALTER TABLE `menu`
+  ADD PRIMARY KEY (`id_menu`),
+  ADD KEY `id_focaccia` (`id_focaccia`),
+  ADD KEY `id_boisson` (`id_boisson`);
+
+--
+-- Index pour la table `paye`
+--
+ALTER TABLE `paye`
+  ADD PRIMARY KEY (`id_client`,`jour`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `boisson`
+--
+ALTER TABLE `boisson`
+  MODIFY `id_boisson` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `client`
+--
+ALTER TABLE `client`
+  MODIFY `id_client` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `focaccia`
+--
+ALTER TABLE `focaccia`
+  MODIFY `id_focaccia` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `ingredient`
+--
+ALTER TABLE `ingredient`
+  MODIFY `id_ingredient` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `marque`
+--
+ALTER TABLE `marque`
+  MODIFY `id_marque` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `menu`
+--
+ALTER TABLE `menu`
+  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Contraintes pour les tables déchargées
@@ -186,42 +241,34 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Contraintes pour la table `achete`
 --
 ALTER TABLE `achete`
-  ADD CONSTRAINT `achete_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`),
-  ADD CONSTRAINT `achete_ibfk_2` FOREIGN KEY (`id_menu`) REFERENCES `menu` (`id_menu`);
+  ADD CONSTRAINT `achete_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `achete_ibfk_2` FOREIGN KEY (`id_menu`) REFERENCES `menu` (`id_menu`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `boisson`
 --
 ALTER TABLE `boisson`
-  ADD CONSTRAINT `boisson_ibfk_1` FOREIGN KEY (`id_marque`) REFERENCES `marque` (`id_marque`);
+  ADD CONSTRAINT `boisson_ibfk_1` FOREIGN KEY (`id_marque`) REFERENCES `marque` (`id_marque`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `compose`
 --
 ALTER TABLE `compose`
-  ADD CONSTRAINT `compose_ibfk_1` FOREIGN KEY (`id_focaccia`) REFERENCES `focaccia` (`id_focaccia`),
-  ADD CONSTRAINT `compose_ibfk_2` FOREIGN KEY (`id_ingredient`) REFERENCES `ingredient` (`id_ingredient`);
-
---
--- Contraintes pour la table `focaccia`
---
-ALTER TABLE `focaccia`
-  ADD CONSTRAINT `focaccia_ibfk_1` FOREIGN KEY (`id_composition`) REFERENCES `composition` (`id_composition`);
+  ADD CONSTRAINT `compose_ibfk_1` FOREIGN KEY (`id_focaccia`) REFERENCES `focaccia` (`id_focaccia`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `compose_ibfk_2` FOREIGN KEY (`id_ingredient`) REFERENCES `ingredient` (`id_ingredient`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `menu`
 --
 ALTER TABLE `menu`
-  ADD CONSTRAINT `fk_menu_boisson` FOREIGN KEY (`id_boisson`) REFERENCES `boisson` (`id_boisson`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_menu_focaccia` FOREIGN KEY (`id_focaccia`) REFERENCES `focaccia` (`id_focaccia`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`id_focaccia`) REFERENCES `focaccia` (`id_focaccia`),
-  ADD CONSTRAINT `menu_ibfk_2` FOREIGN KEY (`id_boisson`) REFERENCES `boisson` (`id_boisson`);
+  ADD CONSTRAINT `menu_ibfk_1` FOREIGN KEY (`id_focaccia`) REFERENCES `focaccia` (`id_focaccia`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `menu_ibfk_2` FOREIGN KEY (`id_boisson`) REFERENCES `boisson` (`id_boisson`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `paye`
 --
 ALTER TABLE `paye`
-  ADD CONSTRAINT `paye_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`);
+  ADD CONSTRAINT `paye_ibfk_1` FOREIGN KEY (`id_client`) REFERENCES `client` (`id_client`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
